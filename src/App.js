@@ -1,29 +1,25 @@
 import React ,{useState} from "react";
 //import Axios from 'axios' 
 import ".//App.css";
+//import * from '../webxr-polyfill/webxr-polyfill.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-//import { ARButton } from "three/examples/jsm/webxr/ARButton";
-//import * from '../webxr-polyfill/webxr-polyfill.js';
+import { ARButton } from "three/examples/jsm/webxr/ARButton";
+import  {ViewinAR2D} from './AR_button.js'
 
-<script src="../webxr-polyfill/webxr-polyfill.js"></script>
+
+//<script src="../webxr-polyfill/webxr-polyfill.js"></script>
+//<script src="https://launchar.app/sdk/v1?key=YOUR_SDK_KEY"></script>
 
 
 function App() {
 
-  // const [joke, setJoke]= useState("")
-  // const getJoke = () => {
-  //   Axios.get ( "https://official-joke-api.appspot.com/random_joke").then(
-  //     (response) => {
-  //     console.log(response) ;
-  //     setJoke(response.data.setup + "..." + response.data.setup)
-  //     }
-  //   );
-  // };
-// return (
- 
-//   );
+navigator.xr.requestSession('immersive-ar', {
+  requiredFeatures: ['local', 'anchors', 'dom-overlay', 'hit-test'],
+})
+
+
 
   const ViewinAR3D =()=>{
 
@@ -88,61 +84,6 @@ function App() {
 
   };
 
-  const ViewinAR2D =()=>{
-
-    const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 100000 )
-    camera.position.set( 0, 0, 4);
-
-    
-    // LIGHTS
-    const ambientLight = new THREE.AmbientLight(0xFFFFFF, 5 );
-    
-    const light = new THREE.DirectionalLight( 0xFFFFFF, 1 );
-    light.position.set( 0.32, 0.39, 0.7 );
-    
-    
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    document.body.appendChild( renderer.domElement );
-
-    const texture = new THREE.TextureLoader().load( './sw_door.png' );
-    texture.colorSpace = THREE.SRGBColorSpace;
-
-    const geometry = new THREE.PlaneGeometry( 2, 4 );
-    const material = new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide } );
-    const scene = new THREE.Scene();
-        scene.background = new THREE.Color( 0xAAAAAA );
-    const mesh = new THREE.Mesh( geometry, material );
-    scene.add( mesh );
-
-
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.enableRotate = true;
-  
-    
-    //camera.position.z = 5000;
-            //scene.background = new THREE.Color( 0xAAAAAA );
-    
-            scene.add( ambientLight );
-           //scene.add( light );
-    console.log(scene)
-    function animate() {
-      requestAnimationFrame( animate );
-    
-       renderer.render( scene, camera, );
-       controls.update()
-    }
-    
-    animate();
-     
-
-  };
-
-
-
-
 return(
   <>
  <div className="button-container">
@@ -160,11 +101,6 @@ return(
         </button>
       </div>
 
-
-  {/* <div>
-  Hello Youtube <button onClick={getJoke} > Get Joke Right Now </button>
-  {joke}
-  </div>  */}
   </>
 );
 
