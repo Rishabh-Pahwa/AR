@@ -13,13 +13,13 @@
     "react-scripts": "5.0.1",
     "three": "^0.153.0",
     "web-vitals": "^2.1.4",
+    "webpack": "^5.88.0",
     "yarn": "^1.22.19"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start:live": "concurrently --names 'wds,localtunnel' --prefix-colors 'green,yellow' --kill-others-on-fail \"npm start\" \"lt --port 8080\"",
+    "build": "webpack build"
   },
   "eslintConfig": {
     "extends": [
@@ -40,6 +40,9 @@
     ]
   },
   "devDependencies": {
-    "vite": "^4.3.9"
+    "concurrently": "^7.6.0",
+    "localtunnel": "^2.0.2",
+    "vite": "^4.3.9",
+    "webpack-cli": "^5.1.4"
   }
 }
