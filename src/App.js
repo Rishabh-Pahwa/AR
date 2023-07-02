@@ -1,11 +1,13 @@
-import React ,{useState} from "react";
+//import React ,{useState} from "react";
+import React from "react";
 //import Axios from 'axios' 
 import ".//App.css";
 //import * from '../webxr-polyfill/webxr-polyfill.js';
 import * as THREE from 'three';
 //import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 //import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { ARButton } from "three/examples/jsm/webxr/ARButton";
+import { ARButton } from 'three/addons/webxr/ARButton.js';
+//import { ARButton } from "three/examples/jsm/webxr/ARButton";
 //import  {ViewinAR2D} from './AR_button.js'
 
 
@@ -17,65 +19,91 @@ function App() {
  
   
   const ViewinAR2D =()=>{
-  
+
       let camera, scene, renderer;
       let controller;
   
-      let hitTestSource = null;
-      let hitTestSourceRequested = false;
+      // let hitTestSource = null;
+     // let hitTestSourceRequested = false;
+
+      init();
+      animate();
+
 
       // navigator.xr.requestSession('immersive-ar', {
       //   requiredFeatures: ['local', 'anchors', 'hit-test'],
       // })
-      
-      scene = new THREE.Scene();
 
-      camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 200 );
-  
-      
-      // LIGHTS
-  
-      const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 1 );
-      light.position.set( 0.5, 1, 0.25 );
-  
-      
-    
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.xr.enabled = true;
-      document.body.appendChild(renderer.domElement);
-  
-      document.body.appendChild(
-          ARButton.createButton(renderer));
-  
-  
-      const texture = new THREE.TextureLoader().load( './sw_door.png' );
-      texture.colorSpace = THREE.SRGBColorSpace;
-  
-      const geometry = new THREE.PlaneGeometry( 2, 4 );
-      const material = new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide } );
+      function init(){
 
-      //scene.background = new THREE.Color( 0xAAAAAA );
-      const mesh = new THREE.Mesh( geometry, material );
-      scene.add( mesh );
-  
-  
-  
-      controller = renderer.xr.getController(0);
-      //controller.addEventListener( 'select', onSelect );
-      scene.add(controller);
+
+        const container = document.createElement( 'div' );
+        document.body.appendChild( container );
+      
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 100000 );
+        //camera.position.set( 0, 0, 4);
+    
+        
+        // LIGHTS
+    
+        const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 3 );
+        light.position.set( 0.5, 1, 0.25 );
+        scene.add(light);
+    
+        
+      
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.xr.enabled = true;
+        container.appendChild(renderer.domElement);
+    
+        document.body.appendChild(ARButton.createButton(renderer));
+    
+
+        const geometry = new THREE.PlaneGeometry( 2, 4 );
+
+        function onSelect(){
+        const texture = new THREE.TextureLoader().load( './sw_door.png' );
+        texture.colorSpace = THREE.SRGBColorSpace;
+        const material = new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide } );
+        const mesh = new THREE.Mesh( geometry, material );
+        scene.add( mesh );
+        }
+    
+    
+    
+        controller = renderer.xr.getController(0);
+        controller.addEventListener( 'select', onSelect );
+        scene.add(controller);
+
+        window.addEventListener( 'resize', onWindowResize );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
     
       
   
-      //console.log(scene)
+      console.log(scene)
+
       function animate() {
-        requestAnimationFrame( animate );
-      
-         renderer.render( scene, camera, );
+        renderer.setAnimationLoop(render);
+      }
+
+      function render(){
+        renderer.render(scene, camera);
       }
       
-      animate();
       
   
   };
