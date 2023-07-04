@@ -1,5 +1,6 @@
 //import React ,{useState} from "react";
-import React from "react";
+import { useEffect } from "react";
+//import React from "react";
 //import Axios from 'axios' 
 import ".//App.css";
 //import * from '../webxr-polyfill/webxr-polyfill.js';
@@ -14,18 +15,9 @@ import { ARButton } from 'three/addons/webxr/ARButton.js';
 //<script src="../webxr-polyfill/webxr-polyfill.js"></script>
 //<script src="https://launchar.app/sdk/v1?key=OJCGSzkAxldsp3QiEw45MmgHE8dnPyBH"></script>
 
-
 function App() {
- 
-  
-  const ViewinAR2D =()=>{
-
-
-      let container;    
-      let camera, scene, renderer;
-      let controller;
-
-      let reticle_line;
+  useEffect(() => {
+    let container, renderer, camera, scene, controller, reticle_line;
   
       let hitTestSource = null;
       let hitTestSourceRequested = false;
@@ -46,7 +38,7 @@ function App() {
       
         scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 2000);
+        camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01 , 2000);
        // camera.position.set( 0, 0, 40);
     
         
@@ -61,6 +53,7 @@ function App() {
         renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.useLegacyLights = false;
         renderer.xr.enabled = true;
         container.appendChild(renderer.domElement);
     
@@ -74,7 +67,8 @@ function App() {
             texture.colorSpace = THREE.SRGBColorSpace;
             const material = new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide } );
             const plane = new THREE.Mesh( geometry, material );
-            reticle_line.matrix.decompose( plane.position, plane.quaternion, plane.scale );
+            reticle_line.matrix.decompose( plane.position, plane.quaternion, plane.scale  );
+            plane.scale.y = Math.random() * 2 + 1;
             scene.add( plane );
           }
         }
@@ -191,35 +185,14 @@ function App() {
 				renderer.render( scene, camera );
 
 			}
-      
-      
   
-  };
 
-return(
-  <>
-  {/* <div className="button-container">
-        <button
-          className="action-button"
-          onClick={ViewinAR2D}
-        >
-          VIEW (2D Scan)
-        </button> */}
+    return () => {
+      renderer.dispose();
+    };
+  }, []);
 
-        <button
-          className="action-button"
-          onClick={ViewinAR2D}
-        >
-          View in AR
-        </button>
-        {/* <div> 
-          {ViewinAR2D}
-        </div> */}
-
-        {/* </div> */}
-
-  </>
-);
-
+  return null;
 }
+
 export default App;
