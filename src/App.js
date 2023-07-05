@@ -38,7 +38,7 @@ function App() {
       
         scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01 , 2000);
+        camera = new THREE.PerspectiveCamera( 125, window.innerWidth / window.innerHeight, 0.6 , 50000);
        // camera.position.set( 0, 0, 40);
     
         
@@ -58,17 +58,18 @@ function App() {
         container.appendChild(renderer.domElement);
     
         document.body.appendChild( ARButton.createButton( renderer, { requiredFeatures: [ 'hit-test' ] } ) );
-    
-        const geometry = new THREE.PlaneGeometry( 2, 4 );
-
+        
+        // DOOR PLANE
+        const geometry = new THREE.PlaneGeometry( 4, 8.4 ).translate( 0.25, 0, -3.5 );
+        
         function onSelect(){
           if(reticle_line.visible){
-            const texture = new THREE.TextureLoader().load( './sw_door.png' );
+            //const texture = new THREE.TextureLoader().load( './sw_door.png' );
+            const texture = new THREE.TextureLoader().load( './door-2.png' );
             texture.colorSpace = THREE.SRGBColorSpace;
             const material = new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide } );
             const plane = new THREE.Mesh( geometry, material );
             reticle_line.matrix.decompose( plane.position, plane.quaternion, plane.scale  );
-            plane.scale.y = Math.random() * 2 + 1;
             scene.add( plane );
           }
         }
@@ -80,45 +81,30 @@ function App() {
         scene.add(controller);
 
 
-        // // Create a geometry for the line
-        // const Lgeometry = new THREE.BufferGeometry();
-        // const lineLength = 4; // Length in world units
-        // const vertices = new Float32Array([
-        //   0, 0, 0,           // Start point
-        //   lineLength, 0, 0   // End point
-        // ]);
-        // geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-
-        // // Create a material for the line
-        // const material = new THREE.LineBasicMaterial({ color: 0x00ff00 });
-
-        // // Create a line segments object
-        //  reticle_line = new THREE.LineSegments(Lgeometry, material);
-
-        // // Add the line to the scene
-        // scene.add(reticle_line);
-
+        //RETCILE LINE
         reticle_line = new THREE.Mesh(
-					new THREE.RingGeometry( 0.15, 0.2, 32 ),
-					new THREE.MeshBasicMaterial()
+					// new THREE.RingGeometry( 0.15, 0.2, 32 ),
+					// new THREE.MeshBasicMaterial()
+          new THREE.PlaneGeometry( 2.25, 0.1 ).translate( 0, -1.5, 0 ),
+          new THREE.MeshBasicMaterial( {color: 0x4E4FEB, side: THREE.DoubleSide} )
 				);
 				reticle_line.matrixAutoUpdate = false;
 				reticle_line.visible = false;
 				scene.add( reticle_line );
 
 
-        window.addEventListener( 'resize', onWindowResize );
+       // window.addEventListener( 'resize', onWindowResize );
 
 			}
 
-			function onWindowResize() {
+			// function onWindowResize() {
 
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
+			// 	camera.aspect = window.innerWidth / window.innerHeight;
+			// 	camera.updateProjectionMatrix();
 
-				renderer.setSize( window.innerWidth, window.innerHeight );
+			// 	renderer.setSize( window.innerWidth, window.innerHeight );
 
-			}
+			// }
     
       
   
