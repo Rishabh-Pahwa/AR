@@ -65,9 +65,10 @@ function App() {
         function onSelect(){
           if(reticle_line.visible){
             //const texture = new THREE.TextureLoader().load( './sw_door.png' );
-            const texture = new THREE.TextureLoader().load( './door-2.png' );
+            const texture = new THREE.TextureLoader().load( './door-3(Rembg).png' );
             texture.colorSpace = THREE.SRGBColorSpace;
-            const material = new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide } );
+            const material = new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide, transparent:true} );
+            //, opacity:0.2 
             const plane = new THREE.Mesh( geometry, material );
             reticle_line.matrix.decompose( plane.position, plane.quaternion, plane.scale  );
             scene.add( plane );
